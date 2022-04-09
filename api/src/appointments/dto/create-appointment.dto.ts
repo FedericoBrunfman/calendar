@@ -1,4 +1,5 @@
-import { IsString } from "class-validator";
+import { IsDate, IsEnum, IsNumber, IsString } from "class-validator";
+import { Subsidiary } from "../appointments.enum";
 
 export class CreateAppointmentDto {
   @IsString()
@@ -7,15 +8,15 @@ export class CreateAppointmentDto {
   @IsString()
   readonly description: string;
   
-  @IsString()
-  readonly startTime: string;
-
-  @IsString()
-  readonly endTime: string;
+  @IsNumber()
+  readonly length: number;
   
-  @IsString()
-  readonly date: string;
+  @IsDate()
+  readonly date: Date;
   
   @IsString()
   readonly office: string;
+
+  @IsEnum(Subsidiary)
+  readonly subsidiary: string
 }

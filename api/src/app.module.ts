@@ -9,7 +9,7 @@ import { AppointmentsModule } from './appointments/appointments.module';
   imports: [
     OfficesModule,
     MongooseModule.forRoot('mongodb://localhost:27017/calendar-malabia'),
-    AppointmentsModule,
+    AppointmentsModule
   ],
   controllers: [AppController],
   providers: [AppService],

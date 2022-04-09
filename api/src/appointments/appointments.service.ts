@@ -17,15 +17,20 @@ export class AppointmentsService {
     @InjectModel(Appointment.name)
     private readonly appointmentModel: Model<Appointment>,
   ) {}
-  
+
   create(createAppointmentDto: CreateAppointmentDto) {
-    const appointment = new this.appointmentModel(createAppointmentDto)
+    const appointment = new this.appointmentModel(createAppointmentDto);
     return appointment.save();
   }
 
   findAll(paginationQuery: PaginationQueryDto) {
     const { limit, offset } = paginationQuery;
-    return this.appointmentModel.find().skip(offset).limit(limit).populate('office').exec()
+    return this.appointmentModel
+      .find()
+      .skip(offset)
+      .limit(limit)
+      .populate('office')
+      .exec();
   }
 
   findOne(id: string) {

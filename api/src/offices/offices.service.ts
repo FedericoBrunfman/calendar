@@ -16,8 +16,6 @@ import { Office } from './entities/office.entity';
 export class OfficesService {
   constructor(
     @InjectModel(Office.name) private readonly officeModel: Model<Office>,
-    @InjectConnection() private readonly connection: Connection,
-    @InjectModel(Event.name) private readonly eventModel: Model<Event>,
   ) {}
 
   findAll(paginationQuery: PaginationQueryDto) {

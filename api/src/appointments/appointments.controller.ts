@@ -13,7 +13,7 @@ import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
-import { OfficeExists } from './guards/office-exists.ts.guard';
+import { OfficeExists } from './guards/office-exists.guard';
 
 @Controller('appointments')
 export class AppointmentsController {

@@ -1,9 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
-// import { Type } from 'class-transformer';
-// import mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
-import { Subsidiary } from '../office.enum';
+import { Subsidiary } from 'src/appointments/appointments.enum';
 
 @Schema()
 export class Office extends Document {

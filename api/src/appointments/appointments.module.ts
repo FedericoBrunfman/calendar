@@ -4,6 +4,7 @@ import { AppointmentsController } from './appointments.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Appointment, AppointmentSchema } from './entities/appointment.entity';
 import { OfficesModule } from 'src/offices/offices.module';
+import { AppointmentSeed } from './seeds/appointment.seed';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { OfficesModule } from 'src/offices/offices.module';
     OfficesModule
   ],
   controllers: [AppointmentsController],
-  providers: [AppointmentsService],
+  providers: [AppointmentsService, AppointmentSeed],
 })
 export class AppointmentsModule {}
