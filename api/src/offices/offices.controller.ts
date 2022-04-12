@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { CreateOfficeDto } from './dto/create-office.dto';
+import { OfficeQuery } from './dto/office-query.dto';
 import { UpdateOfficeDto } from './dto/update-office.dto';
 import { OfficesService } from './offices.service';
 
@@ -21,9 +22,8 @@ export class OfficesController {
   constructor(private readonly officesService: OfficesService) {}
 
   @Get()
-  findAll(@Query() paginationQuery: PaginationQueryDto) {
-    // const { limit, offset } = paginationQuery;
-    return this.officesService.findAll(paginationQuery);
+  findAll(@Query() paginationQuery: PaginationQueryDto, @Query() officeQuery: OfficeQuery ) {
+    return this.officesService.findAll(paginationQuery, officeQuery);
   }
 
   @Get(':id')

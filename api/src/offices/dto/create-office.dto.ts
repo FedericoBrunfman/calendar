@@ -1,12 +1,10 @@
-import { IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
+import { Subsidiary } from '../offices.enum';
 
 export class CreateOfficeDto {
   @IsString()
   readonly name: string;
 
-  // @IsString()
-  // readonly brand: string;
-
-  // @IsString({ each: true })
-  // readonly flavors: string[];
+  @IsEnum(Subsidiary)
+  readonly subsidiary: string;
 }

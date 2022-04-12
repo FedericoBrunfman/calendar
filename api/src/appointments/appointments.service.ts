@@ -10,6 +10,7 @@ import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { Appointment } from './entities/appointment.entity';
 import { Model } from 'mongoose';
+import { DateQuery } from './dto/date-query.dto';
 
 @Injectable()
 export class AppointmentsService {
@@ -25,12 +26,14 @@ export class AppointmentsService {
 
   findAll(paginationQuery: PaginationQueryDto) {
     const { limit, offset } = paginationQuery;
-    return this.appointmentModel
+    const appointments = this.appointmentModel
       .find()
       .skip(offset)
       .limit(limit)
       .populate('office')
       .exec();
+
+    return appointments;
   }
 
   findOne(id: string) {
@@ -60,5 +63,19 @@ export class AppointmentsService {
   async remove(id: string) {
     const appointment = await this.findOne(id);
     return appointment.remove();
+  }
+
+  findManyByDate(dateQuery: DateQuery) {
+    const { startDate, endDate } = dateQuery;
+    
+    const appointments = this.appointmentModel
+      .find({
+        date: {
+          $gte: new Date(startDate).toISOString(),
+          $lte: new Date(endDate).toISOString(),
+        },
+      })
+      .exec();
+    return appointments;
   }
 }

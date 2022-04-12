@@ -11,6 +11,7 @@ import { CreateOfficeDto } from './dto/create-office.dto';
 import { Event } from 'src/events/entities/event.entity';
 import { UpdateOfficeDto } from './dto/update-office.dto';
 import { Office } from './entities/office.entity';
+import { OfficeQuery } from './dto/office-query.dto';
 
 @Injectable()
 export class OfficesService {
@@ -18,13 +19,29 @@ export class OfficesService {
     @InjectModel(Office.name) private readonly officeModel: Model<Office>,
   ) {}
 
-  findAll(paginationQuery: PaginationQueryDto) {
+  findAll(paginationQuery: PaginationQueryDto, officeQuery: OfficeQuery) {
     const { limit, offset } = paginationQuery;
-    return this.officeModel.find().skip(offset).limit(limit).exec();
+    const { subsidiary, name } = officeQuery;
+    const query: any = {}
+    if (subsidiary) query.subsidiary = { $eq: subsidiary }
+    if (name) query.name = { $eq: name }
+    return this.officeModel
+      .find(query)
+      .skip(offset)
+      .limit(limit)
+      .populate({
+        path: 'appointments',
+      })
+      .exec();
   }
 
   findOne(id: string) {
-    const office = this.officeModel.findOne({ _id: id }).exec();
+    const office = this.officeModel
+      .findOne({ _id: id })
+      .populate({
+        path: 'appointments',
+      })
+      .exec();
     if (!office) {
       throw new HttpException(`Office ${id} not found`, HttpStatus.NOT_FOUND);
     }

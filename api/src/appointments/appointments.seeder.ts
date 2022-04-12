@@ -9,8 +9,8 @@ export class AppointmentSeeder implements Seeder {
   constructor(@InjectModel(Appointment.name) private readonly appointment: Model<Appointment>) {}
  
   async seed(): Promise<any> {
-    // Generate 10 users.
-    const appointments = DataFactory.createForClass(Appointment).generate(10);
+    // Generate 100 appointments.
+    const appointments = DataFactory.createForClass(Appointment).generate(100);
  
     // Insert into the database.
     return this.appointment.insertMany(appointments);

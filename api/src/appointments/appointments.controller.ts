@@ -12,6 +12,7 @@ import {
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
+import { DateQuery } from './dto/date-query.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { OfficeExists } from './guards/office-exists.guard';
 
@@ -28,6 +29,11 @@ export class AppointmentsController {
   @Get()
   findAll(@Query() paginationQuery: PaginationQueryDto) {
     return this.appointmentsService.findAll(paginationQuery);
+  }
+
+  @Get('date')
+  findManyByDate(@Query() dateQuery: DateQuery) {
+    return this.appointmentsService.findManyByDate(dateQuery);
   }
 
   @Get(':id')

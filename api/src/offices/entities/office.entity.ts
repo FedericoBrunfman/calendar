@@ -1,9 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
 import { Document, ObjectId } from 'mongoose';
-import { Subsidiary } from 'src/appointments/appointments.enum';
+import { Subsidiary } from '../offices.enum';
 
-@Schema()
+@Schema({
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
+})
 export class Office extends Document {
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
@@ -12,20 +15,15 @@ export class Office extends Document {
   name: string;
 
   @Prop()
-  subsidiary: Subsidiary
-
-  // @Prop()
-  // brand: string;
-
-  // @Prop({ default: 0 })
-  // recommendations: number;
-
-  // @Prop([String])
-  // flavors: string[];
-
-  // @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: Appointment.name })
-  // @Type(() => Appointment)
-  // appointments: Appointment[];
+  subsidiary: Subsidiary;
 }
 
-export const OfficeSchema = SchemaFactory.createForClass(Office);
+const OfficeSchema = SchemaFactory.createForClass(Office);
+
+OfficeSchema.virtual('appointments', {
+  ref: 'Appointment',
+  localField: '_id',
+  foreignField: 'office',
+});
+
+export { OfficeSchema };
