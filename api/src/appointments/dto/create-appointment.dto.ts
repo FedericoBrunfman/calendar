@@ -7,8 +7,8 @@ export class CreateAppointmentDto {
   @IsString()
   readonly description: string;
   
-  @IsNumber()
-  readonly length: number;
+  @IsString()
+  readonly modules: string;
   
   @IsDate()
   readonly date: Date;

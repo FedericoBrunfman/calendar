@@ -1,18 +1,107 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <one-day-table
+      v-if="!isLoading"
+      :offices.sync="offices"
+      :keys="hours"
+      :selected-date="selectedDate"
+      @date="getAppointmentsByDate($event)"
+      :key="tableKey"
+      :picker="picker"
+      @create="createAppointment($event)"
+    />
+    <loading v-else />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import OneDayTable from "../components/OneDayTable.vue";
+import { getAllOffices } from "../services/OfficeService";
+import {
+  getAppointmentsByDate,
+  createAppointment,
+} from "../services/AppointmentService";
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
-    HelloWorld
-  }
-}
+    OneDayTable,
+  },
+  data() {
+    return {
+      offices: [],
+      hours: this.createHours(),
+      selectedDate: this.createDate(),
+      tableKey: 0,
+      isLoading: false,
+      renderComponent: 0,
+      picker: null,
+    };
+  },
+  async mounted() {
+    const date = this.createDate(new Date());
+    await this.getAllOffices();
+    await this.getAppointmentsByDate(date, true);
+  },
+  methods: {
+    createHours() {
+      let hours = [];
+      for (let index = 8; index <= 20; index++) {
+        if (index < 10) {
+          hours.push(`0${index}:00`);
+          hours.push(`0${index}:30`);
+        } else {
+          hours.push(`${index}:00`);
+          if (index !== 20) hours.push(`${index}:30`);
+        }
+      }
+      return hours;
+    },
+    getAllOffices() {
+      getAllOffices().then((response) => {
+        this.offices = response.map((office) => {
+          let hoursObj = {};
+          this.hours.forEach((element) => {
+            hoursObj = { ...hoursObj, [element]: "" };
+          });
+          return { ...office, ...hoursObj };
+        });
+      });
+    },
+    createDate(date) {
+      let d = !date ? new Date() : new Date(date);
+      return d.toISOString().substr(0, 10);
+    },
+    createAppointment({ data }) {
+      createAppointment(data).then(() => {
+        this.getAppointmentsByDate(this.selectedDate);
+      });
+    },
+    async getAppointmentsByDate(date, isLoading) {
+      if (isLoading) this.isLoading = true;
+      let d = new Date(date);
+      d.setUTCDate(d.getUTCDate() + 1);
+      const nextDay = d.toISOString().substr(0, 10);
+      await this.getAllOffices();
+      getAppointmentsByDate({
+        startDate: date,
+        endDate: nextDay,
+      })
+        .then((response) => {
+          response.forEach((el) => {
+            const index = this.offices.findIndex(
+              (office) => office.id === el.id
+            );
+            if (index !== -1) this.offices[index] = el;
+          });
+          this.selectedDate = date;
+          this.tableKey++;
+        })
+        .finally(() => {
+          if (isLoading) this.isLoading = false;
+          this.picker = this.selectedDate
+        });
+    },
+  },
+};
 </script>

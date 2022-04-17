@@ -4,6 +4,7 @@ import { AppointmentsController } from './appointments.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Appointment, AppointmentSchema } from './entities/appointment.entity';
 import { OfficesModule } from 'src/offices/offices.module';
+import { DatesModule } from 'src/common/dates/dates.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { OfficesModule } from 'src/offices/offices.module';
         schema: AppointmentSchema,
       },
     ]),
-    OfficesModule
+    OfficesModule,
+    DatesModule
   ],
   controllers: [AppointmentsController],
   providers: [AppointmentsService],

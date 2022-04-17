@@ -21,18 +21,17 @@ export class OfficesService {
 
   findAll(paginationQuery: PaginationQueryDto, officeQuery: OfficeQuery) {
     const { limit, offset } = paginationQuery;
-    const { subsidiary, name } = officeQuery;
-    const query: any = {}
-    if (subsidiary) query.subsidiary = { $eq: subsidiary }
-    if (name) query.name = { $eq: name }
-    return this.officeModel
-      .find(query)
-      .skip(offset)
-      .limit(limit)
-      .populate({
-        path: 'appointments',
-      })
-      .exec();
+    const { subsidiary, name, populate } = officeQuery;
+    const query: any = {};
+    if (subsidiary) query.subsidiary = { $eq: subsidiary };
+    if (name) query.name = { $eq: name };
+
+    let officeModel = this.officeModel.find(query).skip(offset).limit(limit);
+    if (populate)
+      officeModel.populate({
+        path: populate ? 'appointments' : '',
+      });
+    return officeModel.exec();
   }
 
   findOne(id: string) {

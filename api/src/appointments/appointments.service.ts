@@ -11,12 +11,14 @@ import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { Appointment } from './entities/appointment.entity';
 import { Model } from 'mongoose';
 import { DateQuery } from './dto/date-query.dto';
+import { DatesService } from 'src/common/dates/dates.service';
 
 @Injectable()
 export class AppointmentsService {
   constructor(
     @InjectModel(Appointment.name)
     private readonly appointmentModel: Model<Appointment>,
+    private readonly datesService: DatesService,
   ) {}
 
   create(createAppointmentDto: CreateAppointmentDto) {
@@ -65,17 +67,18 @@ export class AppointmentsService {
     return appointment.remove();
   }
 
-  findManyByDate(dateQuery: DateQuery) {
+  async findManyByDate(dateQuery: DateQuery) {
     const { startDate, endDate } = dateQuery;
-    
-    const appointments = this.appointmentModel
+
+    const appointments = await this.appointmentModel
       .find({
         date: {
           $gte: new Date(startDate).toISOString(),
-          $lte: new Date(endDate).toISOString(),
+          $lt: new Date(endDate).toISOString(),
         },
       })
+      .populate('office')
       .exec();
-    return appointments;
+    return this.datesService.formatDates(appointments);
   }
 }

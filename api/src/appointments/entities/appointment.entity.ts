@@ -30,11 +30,22 @@ export class Appointment extends Document {
   @Prop()
   description: string;
 
-  @Factory('30')
+  @Factory((faker) =>
+    faker.random.arrayElement([
+      'Una sola vez',
+      'Todas las semanas',
+      'Una vez por mes',
+    ]),
+  )
   @Prop()
-  length: number;
+  modules: string;
 
-  @Factory((faker) => faker.date.recent(20))
+  @Factory((faker) => {
+    console.log(faker.date.recent(20), 'faker');
+    const date = new Date(faker.date.recent(20)).setMinutes(0);
+    console.log('date', date);
+    return date;
+  })
   @Prop()
   date: Date;
 
