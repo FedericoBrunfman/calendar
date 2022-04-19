@@ -155,6 +155,8 @@
                           </v-btn>
                         </template>
                         <create-form
+                          :time="key"
+                          :hours="keys"
                           @create="createAppointment(key, item.id, $event)"
                         />
                       </v-dialog>
@@ -166,9 +168,27 @@
                         </v-btn>
                       </div>
                       <div class="icono">
-                        <v-btn x-small class="mx-2" fab dark color="red">
-                          <v-icon dark> mdi-delete </v-icon>
-                        </v-btn>
+                        <v-dialog
+                          v-model="showDelete[`${key}-${item.id}`]"
+                          width="500"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              x-small
+                              class="mx-2"
+                              fab
+                              dark
+                              color="red"
+                              v-bind="attrs"
+                              v-on="on"
+                            >
+                              <v-icon dark> mdi-delete </v-icon>
+                            </v-btn>
+                          </template>
+                          <remove-appointment 
+                            @remove="remove($event, $event === 1 ? item.eventId : item.uuid)"
+                          />
+                        </v-dialog>
                       </div>
                     </div>
                   </v-list-item-content>
@@ -178,12 +198,13 @@
           </v-col>
         </v-row>
       </template>
-      <spinner v-else class="spinner-body d-flex justify-center align-center"/>
+      <spinner v-else class="spinner-body d-flex justify-center align-center" />
     </v-data-iterator>
   </v-container>
 </template>
 <script>
 import createForm from "./createForm.vue";
+import removeAppointment from "./removeAppointment.vue";
 export default {
   props: {
     offices: Array,
@@ -200,6 +221,7 @@ export default {
   },
   components: {
     createForm,
+    removeAppointment
   },
   data() {
     return {
@@ -210,6 +232,7 @@ export default {
       sortDesc: false,
       page: 1,
       showCraeteForm: {},
+      showDelete: {},
       itemsPerPage: 12,
       showPicker: false,
       sortBy: "subsidiary",
@@ -346,8 +369,8 @@ export default {
   updated: function () {
     this.$nextTick(function () {
       setTimeout(() => {
-        this.isLoading = false
-      }, 3000)
+        this.isLoading = false;
+      }, 3000);
     });
   },
   computed: {
@@ -387,14 +410,15 @@ export default {
     nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1;
     },
-    createAppointment(key, id, { title, description, option }) {
-      this.isLoading = true
+    createAppointment(key, id, { title, description, option, extend }) {
+      this.isLoading = true;
       this.showCraeteForm[`${key}-${id}`] = false;
       const date = new Date(`${this.selectedDate}T${key}`);
       this.$emit("create", {
         data: {
           title,
           description,
+          extend,
           date: new Date(
             date.getTime() - date.getTimezoneOffset() * 60000
           ).toJSON(),
@@ -402,6 +426,13 @@ export default {
           office: id,
         },
       });
+    },
+    remove (option, id) {
+      this.isLoading = true
+      this.$emit('remove', {
+        option,
+        id
+      })
     },
     rollContent(id, showContent) {
       if (showContent) this.rolledContent[id] = false;
@@ -430,7 +461,7 @@ export default {
     },
     sendDate() {
       this.showPicker = false;
-      this.isLoading = true
+      this.isLoading = true;
       if (this.selectedDate !== this.picker) this.$emit("date", this.picker);
     },
   },

@@ -9,6 +9,7 @@
       :key="tableKey"
       :picker="picker"
       @create="createAppointment($event)"
+      @remove="remove($event)"
     />
     <loading v-else />
   </div>
@@ -21,6 +22,8 @@ import { getAllOffices } from "../services/OfficeService";
 import {
   getAppointmentsByDate,
   createAppointment,
+  removeAppointment,
+  removeManyAppointment
 } from "../services/AppointmentService";
 export default {
   name: "Home",
@@ -56,6 +59,14 @@ export default {
         }
       }
       return hours;
+    },
+    async remove({ option, id }) {
+      if (option === 1) {
+        await removeAppointment(id);
+      } else {
+        await removeManyAppointment(id)
+      }
+      this.getAppointmentsByDate(this.selectedDate);
     },
     getAllOffices() {
       getAllOffices().then((response) => {
@@ -99,7 +110,7 @@ export default {
         })
         .finally(() => {
           if (isLoading) this.isLoading = false;
-          this.picker = this.selectedDate
+          this.picker = this.selectedDate;
         });
     },
   },

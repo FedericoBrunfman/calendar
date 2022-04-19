@@ -41,9 +41,7 @@ export class Appointment extends Document {
   modules: string;
 
   @Factory((faker) => {
-    console.log(faker.date.recent(20), 'faker');
     const date = new Date(faker.date.recent(20)).setMinutes(0);
-    console.log('date', date);
     return date;
   })
   @Prop()
@@ -53,6 +51,9 @@ export class Appointment extends Document {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Office.name })
   @Type(() => Office)
   office: Office;
+
+  @Prop()
+  uuid: string;
 }
 
 export const AppointmentSchema = SchemaFactory.createForClass(Appointment);

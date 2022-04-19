@@ -14,3 +14,19 @@ export async function createAppointment(data) {
     })
   return await response.json();
 }
+
+export async  function removeAppointment(id) {
+  const response = await fetch(`/appointments/${id}`, {
+    method: 'DELETE',
+    headers: {'Content-Type': 'application/json'},
+  })
+  return await response.json()
+}
+
+export async  function removeManyAppointment(id) {
+  const response = await fetch(`/appointments/remove-many/${id}`, {
+    method: 'DELETE',
+    headers: {'Content-Type': 'application/json'},
+  })
+  return await response.json()
+}

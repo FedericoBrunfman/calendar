@@ -23,7 +23,12 @@ export class AppointmentsService {
 
   create(createAppointmentDto: CreateAppointmentDto) {
     const appointment = new this.appointmentModel(createAppointmentDto);
-    return appointment.save();
+    if (createAppointmentDto.modules === 'Una sola vez') {
+      return appointment.save();
+    } else {
+      const appoinments = this.datesService.extendDates(createAppointmentDto);
+      return this.appointmentModel.insertMany(appoinments);
+    }
   }
 
   findAll(paginationQuery: PaginationQueryDto) {
@@ -65,6 +70,10 @@ export class AppointmentsService {
   async remove(id: string) {
     const appointment = await this.findOne(id);
     return appointment.remove();
+  }
+
+  async removeMany(uuid: string) {
+    return await this.appointmentModel.deleteMany({ uuid });
   }
 
   async findManyByDate(dateQuery: DateQuery) {

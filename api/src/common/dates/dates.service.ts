@@ -1,4 +1,6 @@
 import { DATES_PERIODS } from './dates.constants';
+import { v4 as uuidv4 } from 'uuid';
+import { nextMonth, nextweek } from './helper';
 
 export class DatesService {
   formatDates(appointments) {
@@ -35,6 +37,8 @@ export class DatesService {
           ...calendar,
           ...{
             id: appointment.office._id.toString(),
+            uuid: appointment.uuid.toString(),
+            eventId: appointment._id.toString(),
             name: appointment.office.name,
             subsidiary: appointment.office.subsidiary,
           },
@@ -47,5 +51,43 @@ export class DatesService {
       }
     });
     return calendars;
+  }
+  extendDates(appointment) {
+    const uuid = uuidv4();
+    appointment = { ...appointment, ...{ uuid } };
+    const times = appointment.extend;
+    let newModule = new Date(appointment.date)
+    let appointments = [appointment];
+    for (let i = 1; i <= times; i++) {
+      if (appointment.modules === 'Todas las semanas') {
+        for (let index = 0; index < 150; index++) {
+          let copyAppointment = { ...appointment };
+          const date = nextweek(appointments[index].date, newModule);
+          console.log("~ date", date);
+          console.log("~ newModule", newModule);
+          copyAppointment.date = date;
+          copyAppointment = { ...copyAppointment, ...{ uuid } };
+          appointments.push(copyAppointment);
+        }
+      }
+      if (appointment.modules === 'Una vez por mes') {
+        for (let index = 0; index < 36; index++) {
+          let copyAppointment = { ...appointment };
+          const d = new Date(appointments[index].date);
+          const date = nextMonth(d, newModule);
+          copyAppointment.date = date;
+          copyAppointment = { ...copyAppointment, ...{ uuid } };
+          appointments.push(copyAppointment);
+        }
+      }
+      if (i < times) {
+        let copyAppointment = {...appointment}
+        newModule = new Date(newModule.getTime() + 30*60000)
+        copyAppointment.date = newModule
+        copyAppointment.uuid = uuid
+        appointments.push(copyAppointment)
+      }
+    }
+    return appointments;
   }
 }

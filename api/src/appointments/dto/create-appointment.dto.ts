@@ -1,12 +1,16 @@
-import { IsDate, IsEnum, IsNumber, IsString } from "class-validator";
+import { IsDate, IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateAppointmentDto {
   @IsString()
   readonly title: string;
   
   @IsString()
+  @IsOptional()
   readonly description: string;
   
+  @IsNumber()
+  readonly extend: number;
+
   @IsString()
   readonly modules: string;
   
@@ -15,4 +19,8 @@ export class CreateAppointmentDto {
   
   @IsString()
   readonly office: string;
+  
+  @IsString()
+  @IsOptional()
+  readonly uuid: string;
 }

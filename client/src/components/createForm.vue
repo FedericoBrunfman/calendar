@@ -1,12 +1,12 @@
 <template>
   <v-card>
-    <v-card-title class="text-h5 grey lighten-2"> Nuevo turno </v-card-title>
+    <v-card-title class="text-h5 grey lighten-2"> Nuevo evento </v-card-title>
     <v-card-text>
       <v-text-field
         v-model="mutateTitle"
         counter
         maxlength="25"
-        label="Título del turno"
+        label="Título"
       ></v-text-field>
       <v-textarea
         v-model="mutateDescription"
@@ -18,6 +18,12 @@
         label="Repetir cada:"
         v-model="selected"
       ></v-select>
+      <div class="d-flex align-center">
+        <div class="mr-10">
+          Desde: <strong>{{ time }}</strong> hrs hasta
+        </div>
+        <v-select :items="formatHours()" v-model="finishTime" />
+      </div>
     </v-card-text>
 
     <v-divider></v-divider>
@@ -38,38 +44,38 @@ export default {
     title: String,
     option: {
       type: String,
-      default: "Una sola vez"
+      default: "Una sola vez",
     },
     description: String,
+    hours: Array,
+    time: String,
   },
   data() {
     return {
       selected: this.option,
+      finishTime: "",
       options: ["Una sola vez", "Todas las semanas", "Una vez por mes"],
       mutateTitle: this.title,
       mutateDescription: this.description,
     };
   },
   methods: {
+    formatHours() {
+      let arr = [...this.hours];
+      const index = arr.indexOf(this.time);
+      const newArr = arr.slice(index + 1);
+      return newArr
+    },
     createAppointment() {
-      this.$emit("create", {
-        title: this.mutateTitle,
-        description: this.mutateDescription,
-        option: this.selected,
-      });
+      console.log(this.hours.splice(this.))
+      // this.$emit("create", {
+      //   title: this.mutateTitle,
+      //   description: this.mutateDescription,
+      //   option: this.selected,
+      //   extend: this.hours.indexOf(this.finishTime) + 1
+      // });
     },
   },
-  // watch: {
-  //   mutateTitle(newValue) {
-  //     this.$emit("update:mutateTitle", newValue);
-  //   },
-  //   mutateDescription(newValue) {
-  //     this.$emit("update:mutateDescription", newValue);
-  //   },
-  //   selected(newValue) {
-  //     this.$emit("update:selected", newValue);
-  //   },
-  // },
 };
 </script>
 

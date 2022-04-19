@@ -56,4 +56,9 @@ export class AppointmentsController {
   remove(@Param('id') id: string) {
     return this.appointmentsService.remove(id);
   }
+  
+  @Delete('remove-many/:uuid')
+  removeMany(@Param('uuid') uuid: string) {
+    return this.appointmentsService.removeMany(uuid);
+  }
 }
