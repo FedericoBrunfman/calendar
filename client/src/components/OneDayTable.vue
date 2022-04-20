@@ -125,7 +125,7 @@
 
               <v-list dense v-if="!rolledContent[item.id]">
                 <v-list-item
-                  v-for="(key, index) in filteredKeys"
+                  v-for="(key, index) in keys"
                   :key="`${key}-${index}`"
                   :style="rowStyle(index)"
                 >
@@ -156,7 +156,7 @@
                         </template>
                         <create-form
                           :time="key"
-                          :hours="keys"
+                          :hours="filteredKeys()"
                           @create="createAppointment(key, item.id, $event)"
                         />
                       </v-dialog>
@@ -377,9 +377,6 @@ export default {
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage);
     },
-    filteredKeys() {
-      return this.keys.filter((key) => key !== "Name");
-    },
     filteredOffices() {
       return this.officesData.filter((off) => {
         return (
@@ -409,6 +406,11 @@ export default {
   methods: {
     nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1;
+    },
+    filteredKeys() {
+      const keys = [...this.keys]
+      keys.push('20:30')
+      return keys
     },
     createAppointment(key, id, { title, description, option, extend }) {
       this.isLoading = true;

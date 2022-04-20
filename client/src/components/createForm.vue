@@ -64,16 +64,19 @@ export default {
       let arr = [...this.hours];
       const index = arr.indexOf(this.time);
       const newArr = arr.slice(index + 1);
-      return newArr
+      return newArr;
     },
     createAppointment() {
-      console.log(this.hours.splice(this.))
-      // this.$emit("create", {
-      //   title: this.mutateTitle,
-      //   description: this.mutateDescription,
-      //   option: this.selected,
-      //   extend: this.hours.indexOf(this.finishTime) + 1
-      // });
+      const range = this.hours.slice(
+          this.hours.indexOf(this.time),
+          this.hours.indexOf(this.finishTime)
+        ).length
+      this.$emit("create", {
+        title: this.mutateTitle,
+        description: this.mutateDescription,
+        option: this.selected,
+        extend: range,
+      });
     },
   },
 };
