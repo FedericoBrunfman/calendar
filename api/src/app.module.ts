@@ -3,13 +3,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { OfficesModule } from './offices/offices.module';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { ServeStaticModule } from '@nestjs/serve-static'
+import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
 
 @Module({
   imports: [
     OfficesModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/calendar-malabia'),
     AppointmentsModule,
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MONGODB_URI),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../..', 'client/dist'),
     }),
