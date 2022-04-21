@@ -98,7 +98,7 @@
       <template v-slot:default="props" v-if="!isLoading">
         <v-row>
           <v-col
-            v-for="item in props.items"
+            v-for="(item, ind) in props.items"
             :key="item.id"
             cols="12"
             sm="6"
@@ -156,6 +156,7 @@
                         </template>
                         <create-form
                           :time="key"
+                          :scheduled="offices[ind]"
                           :hours="filteredKeys()"
                           @create="createAppointment(key, item.id, $event)"
                         />
@@ -185,8 +186,13 @@
                               <v-icon dark> mdi-delete </v-icon>
                             </v-btn>
                           </template>
-                          <remove-appointment 
-                            @remove="remove($event, $event === 1 ? item.eventId : item.uuid)"
+                          <remove-appointment
+                            @remove="
+                              remove(
+                                $event,
+                                $event === 1 ? item.eventId : item.uuid
+                              )
+                            "
                           />
                         </v-dialog>
                       </div>
@@ -221,7 +227,7 @@ export default {
   },
   components: {
     createForm,
-    removeAppointment
+    removeAppointment,
   },
   data() {
     return {
@@ -408,9 +414,9 @@ export default {
       if (this.page + 1 <= this.numberOfPages) this.page += 1;
     },
     filteredKeys() {
-      const keys = [...this.keys]
-      keys.push('20:30')
-      return keys
+      const keys = [...this.keys];
+      keys.push("20:30");
+      return keys;
     },
     createAppointment(key, id, { title, description, option, extend }) {
       this.isLoading = true;
@@ -429,12 +435,12 @@ export default {
         },
       });
     },
-    remove (option, id) {
-      this.isLoading = true
-      this.$emit('remove', {
+    remove(option, id) {
+      this.isLoading = true;
+      this.$emit("remove", {
         option,
-        id
-      })
+        id,
+      });
     },
     rollContent(id, showContent) {
       if (showContent) this.rolledContent[id] = false;

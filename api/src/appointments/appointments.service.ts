@@ -22,13 +22,8 @@ export class AppointmentsService {
   ) {}
 
   create(createAppointmentDto: CreateAppointmentDto) {
-    const appointment = new this.appointmentModel(createAppointmentDto);
-    if (createAppointmentDto.modules === 'Una sola vez') {
-      return appointment.save();
-    } else {
-      const appoinments = this.datesService.extendDates(createAppointmentDto);
-      return this.appointmentModel.insertMany(appoinments);
-    }
+    const appoinments = this.datesService.extendDates(createAppointmentDto);
+    return this.appointmentModel.insertMany(appoinments);
   }
 
   findAll(paginationQuery: PaginationQueryDto) {

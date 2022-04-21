@@ -6,11 +6,14 @@
         v-model="mutateTitle"
         counter
         maxlength="25"
+        :error-messages="titleErrors"
         label="Título"
       ></v-text-field>
       <v-textarea
         v-model="mutateDescription"
         name="input-7-1"
+        dense
+        rows="2"
         label="Comentarios"
       ></v-textarea>
       <v-select
@@ -22,7 +25,7 @@
         <div class="mr-10">
           Desde: <strong>{{ time }}</strong> hrs hasta
         </div>
-        <v-select :items="formatHours()" v-model="finishTime" />
+        <v-select :items="formatHours(time)" v-model="finishTime" />
       </div>
     </v-card-text>
 
@@ -49,6 +52,7 @@ export default {
     description: String,
     hours: Array,
     time: String,
+    scheduled: Object,
   },
   data() {
     return {
@@ -57,28 +61,51 @@ export default {
       options: ["Una sola vez", "Todas las semanas", "Una vez por mes"],
       mutateTitle: this.title,
       mutateDescription: this.description,
+      copyScheduled: { ...this.scheduled },
+      titleErrors: []
     };
   },
   methods: {
-    formatHours() {
+    formatHours(time) {
       let arr = [...this.hours];
       const index = arr.indexOf(this.time);
       const newArr = arr.slice(index + 1);
+      let i = null;
+      for (const key in this.copyScheduled) {
+        if (this.copyScheduled[key] && !isNaN(parseInt(key))) {
+          if (key > time) {
+            i = key;
+            break;
+          }
+        }
+      }
+
+      if (i) newArr.splice(newArr.indexOf(i) + 1);
       return newArr;
     },
     createAppointment() {
-      const range = this.hours.slice(
+      if (!this.mutateTitle) {
+        this.titleErrors.push('El titulo es requerido')
+      } else  {
+        const range = this.hours.slice(
           this.hours.indexOf(this.time),
           this.hours.indexOf(this.finishTime)
-        ).length
-      this.$emit("create", {
-        title: this.mutateTitle,
-        description: this.mutateDescription,
-        option: this.selected,
-        extend: range,
-      });
+        ).length;
+        this.$emit("create", {
+          title: this.mutateTitle,
+          description: this.mutateDescription,
+          option: this.selected,
+          extend: range,
+        });
+      }
     },
   },
+  watch: {
+    mutateTitle () {
+      if (this.mutateTitle) this.titleErrors = []
+      else this.titleErrors.push('El titulo es requerido')
+    }
+  }
 };
 </script>
 
