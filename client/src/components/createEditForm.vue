@@ -1,6 +1,7 @@
 <template>
   <v-card>
-    <v-card-title class="text-h5 grey lighten-2"> Nuevo evento </v-card-title>
+    <v-card-title class="text-h5 primary grey--text text--lighten-3" v-if="!isEdit"> Nuevo evento </v-card-title>
+    <v-card-title class="text-h5 success grey--text lighten-1 text--lighten-3" v-else> Editar evento </v-card-title>
     <v-card-text>
       <v-text-field
         v-model="mutateTitle"
@@ -9,13 +10,13 @@
         :error-messages="titleErrors"
         label="Título"
       ></v-text-field>
-      <v-textarea
+      <!-- <v-textarea
         v-model="mutateDescription"
         name="input-7-1"
         dense
         rows="2"
         label="Comentarios"
-      ></v-textarea>
+      ></v-textarea> -->
       <v-select
         :items="options"
         label="Repetir cada:"
@@ -53,6 +54,7 @@ export default {
     hours: Array,
     time: String,
     scheduled: Object,
+    isEdit: Boolean
   },
   data() {
     return {

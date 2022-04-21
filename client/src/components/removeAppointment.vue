@@ -1,6 +1,8 @@
 <template>
   <v-card>
-    <v-card-title class="text-h5 grey lighten-2">Remover evento</v-card-title>
+    <v-card-title class="text-h5 red white--text lighten-2"
+      >Remover evento</v-card-title
+    >
     <v-card-text>
       <v-radio-group v-model="selected">
         <v-radio

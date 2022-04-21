@@ -8,7 +8,7 @@ import { join } from 'path';
 @Module({
   imports: [
     OfficesModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/calendar-malabia'),
+    MongooseModule.forRoot('mongodb+srv://fbrunfman:.z..a.AAA@calendarios.ygu9k.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'),
     AppointmentsModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../..', 'client/dist'),

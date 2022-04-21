@@ -136,39 +136,37 @@
                     class="align-center justify-space-between"
                   >
                     <div class="title-name">{{ item[key.toLowerCase()] }}</div>
-                    <div class="icono" v-if="!item[key]">
-                      <v-dialog
-                        v-model="showCraeteForm[`${key}-${item.id}`]"
-                        width="500"
-                      >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-btn
-                            x-small
-                            class="mx-2"
-                            fab
-                            dark
-                            color="indigo"
-                            v-bind="attrs"
-                            v-on="on"
-                          >
-                            <v-icon dark> mdi-plus </v-icon>
-                          </v-btn>
-                        </template>
-                        <create-form
-                          :time="key"
-                          :scheduled="offices[ind]"
-                          :hours="filteredKeys()"
-                          @create="createAppointment(key, item.id, $event)"
-                        />
-                      </v-dialog>
-                    </div>
-                    <div v-if="item[key]" class="d-flex align-center">
+                    <div class="d-flex align-center">
                       <div class="icono">
-                        <v-btn x-small class="mx-2" fab dark color="green">
-                          <v-icon dark> mdi-pencil </v-icon>
-                        </v-btn>
+                        <v-dialog
+                          v-model="showCraeteForm[`${key}-${item.id}`]"
+                          width="500"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              x-small
+                              class="mx-2"
+                              fab
+                              dark
+                              :color="!item[key] ? 'indigo' : 'green'"
+                              v-bind="attrs"
+                              v-on="on"
+                            >
+                              <v-icon dark v-if="!item[key]"> mdi-plus </v-icon>
+                              <!-- <v-icon dark v-else> mdi-pencil </v-icon> -->
+                            </v-btn>
+                          </template>
+                          <create-edit-form
+                            :time="key"
+                            :scheduled="offices[ind]"
+                            :is-edit="!!item[key]"
+                            :title="item[key]"
+                            :hours="filteredKeys()"
+                            @create="createAppointment(key, item.id, $event)"
+                          />
+                        </v-dialog>
                       </div>
-                      <div class="icono">
+                      <div class="icono" v-if="item[key]">
                         <v-dialog
                           v-model="showDelete[`${key}-${item.id}`]"
                           width="500"
@@ -209,7 +207,7 @@
   </v-container>
 </template>
 <script>
-import createForm from "./createForm.vue";
+import createEditForm from "./createEditForm.vue";
 import removeAppointment from "./removeAppointment.vue";
 export default {
   props: {
@@ -226,7 +224,7 @@ export default {
     },
   },
   components: {
-    createForm,
+    createEditForm,
     removeAppointment,
   },
   data() {
@@ -248,108 +246,6 @@ export default {
       selected: null,
       isLoading: false,
       componentKey: 0,
-      items: [
-        {
-          name: "Frozen Yogurt",
-          "00:00": 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          sodium: 87,
-          calcium: "14%",
-          iron: "1%",
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          sodium: 129,
-          calcium: "8%",
-          iron: "1%",
-        },
-        {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          sodium: 337,
-          calcium: "6%",
-          iron: "7%",
-        },
-        {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          sodium: 413,
-          calcium: "3%",
-          iron: "8%",
-        },
-        {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          sodium: 327,
-          calcium: "7%",
-          iron: "16%",
-        },
-        {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          sodium: 50,
-          calcium: "0%",
-          iron: "0%",
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          sodium: 38,
-          calcium: "0%",
-          iron: "2%",
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          sodium: 562,
-          calcium: "0%",
-          iron: "45%",
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          sodium: 326,
-          calcium: "2%",
-          iron: "22%",
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          sodium: 54,
-          calcium: "12%",
-          iron: "6%",
-        },
-      ],
     };
   },
   directives: {

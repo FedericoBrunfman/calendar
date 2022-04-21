@@ -26,6 +26,11 @@ export class DatesService {
         let calendar = {};
         let dates = {};
         datePeriods.forEach((date) => {
+          // const obj = {
+          //   title: appointment.title,
+          //   description: appointment.description,
+          //   option: appointment.modules
+          // }
           dates = {
             ...dates,
             ...{
