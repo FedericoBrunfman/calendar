@@ -13,7 +13,7 @@ import { join } from 'path';
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URI),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../..', 'client/dist'),
+      rootPath: join(__dirname, '..', 'client/dist'),
     }),
   ]
 })
