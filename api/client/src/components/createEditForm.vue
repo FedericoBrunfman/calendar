@@ -35,7 +35,8 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn color="primary" text @click="createAppointment()">
-        Crear turno
+        <span v-if="!isEdit">Crear evento</span>
+        <span v-else>Editar evento</span>
       </v-btn>
     </v-card-actions>
   </v-card>

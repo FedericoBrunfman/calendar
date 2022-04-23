@@ -137,7 +137,7 @@
                   >
                     <div class="title-name">{{ item[key.toLowerCase()] }}</div>
                     <div class="d-flex align-center">
-                      <div class="icono">
+                      <div class="icono" v-if="!item[key]">
                         <v-dialog
                           v-model="showCraeteForm[`${key}-${item.id}`]"
                           width="500"
@@ -153,7 +153,7 @@
                               v-on="on"
                             >
                               <v-icon dark v-if="!item[key]"> mdi-plus </v-icon>
-                              <!-- <v-icon dark v-else> mdi-pencil </v-icon> -->
+                              <v-icon dark v-else> mdi-pencil </v-icon>
                             </v-btn>
                           </template>
                           <create-edit-form
@@ -188,7 +188,7 @@
                             @remove="
                               remove(
                                 $event,
-                                $event === 1 ? item.eventId : item.uuid
+                                $event === 1 ? item.eventId : item.uuid,
                               )
                             "
                           />
@@ -207,8 +207,8 @@
   </v-container>
 </template>
 <script>
-import createEditForm from "./createEditForm.vue";
-import removeAppointment from "./removeAppointment.vue";
+import createEditForm from './createEditForm.vue';
+import removeAppointment from './removeAppointment.vue';
 export default {
   props: {
     offices: Array,
@@ -230,7 +230,7 @@ export default {
   data() {
     return {
       itemsPerPageArray: [12, 16, 24],
-      search: "",
+      search: '',
       filter: {},
       officesData: this.offices,
       sortDesc: false,
@@ -239,8 +239,8 @@ export default {
       showDelete: {},
       itemsPerPage: 12,
       showPicker: false,
-      sortBy: "subsidiary",
-      checkboxMalabia: "Malabia",
+      sortBy: 'subsidiary',
+      checkboxMalabia: 'Malabia',
       rolledContent: {},
       checkboxMarioBravo: false,
       selected: null,
@@ -249,22 +249,22 @@ export default {
     };
   },
   directives: {
-    "click-outside-app": {
+    'click-outside-app': {
       bind: function (el, binding) {
         const ourClickEventHandler = (event) => {
           if (
             !el.contains(event.target) &&
             el !== event.target &&
-            event.target.id !== "calendar"
+            event.target.id !== 'calendar'
           ) {
             binding.value(event);
           }
         };
         el.__vueClickEventHandler__ = ourClickEventHandler;
-        document.addEventListener("click", ourClickEventHandler);
+        document.addEventListener('click', ourClickEventHandler);
       },
       unbind: function (el) {
-        document.removeEventListener("click", el.__vueClickEventHandler__);
+        document.removeEventListener('click', el.__vueClickEventHandler__);
       },
     },
   },
@@ -276,9 +276,6 @@ export default {
     });
   },
   computed: {
-    numberOfPages() {
-      return Math.ceil(this.items.length / this.itemsPerPage);
-    },
     filteredOffices() {
       return this.officesData.filter((off) => {
         return (
@@ -292,12 +289,12 @@ export default {
       let event = new Date(this.selectedDate || this.picker);
       event.setDate(event.getDate() + 1);
       const options = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
       };
-      return event.toLocaleDateString("es-ES", options);
+      return event.toLocaleDateString('es-ES', options);
     },
   },
   watch: {
@@ -306,25 +303,22 @@ export default {
     },
   },
   methods: {
-    nextPage() {
-      if (this.page + 1 <= this.numberOfPages) this.page += 1;
-    },
     filteredKeys() {
       const keys = [...this.keys];
-      keys.push("20:30");
+      keys.push('20:30');
       return keys;
     },
     createAppointment(key, id, { title, description, option, extend }) {
       this.isLoading = true;
       this.showCraeteForm[`${key}-${id}`] = false;
       const date = new Date(`${this.selectedDate}T${key}`);
-      this.$emit("create", {
+      this.$emit('create', {
         data: {
           title,
           description,
           extend,
           date: new Date(
-            date.getTime() - date.getTimezoneOffset() * 60000
+            date.getTime() - date.getTimezoneOffset() * 60000,
           ).toJSON(),
           modules: option,
           office: id,
@@ -333,7 +327,7 @@ export default {
     },
     remove(option, id) {
       this.isLoading = true;
-      this.$emit("remove", {
+      this.$emit('remove', {
         option,
         id,
       });
@@ -345,28 +339,22 @@ export default {
     hidePicker() {
       this.showPicker = false;
     },
-    formerPage() {
-      if (this.page - 1 >= 1) this.page -= 1;
-    },
-    updateItemsPerPage(number) {
-      this.itemsPerPage = number;
-    },
     headerStyle(subsidiary) {
       return {
-        background: subsidiary === "Malabia" ? "#dbd2fb85" : "#aba4c485",
-        color: "#505050",
-        height: !this.$vuetify.breakpoint.mdAndUp ? "60px" : "auto",
+        background: subsidiary === 'Malabia' ? '#dbd2fb85' : '#aba4c485',
+        color: '#505050',
+        height: !this.$vuetify.breakpoint.mdAndUp ? '60px' : 'auto',
       };
     },
     rowStyle(i) {
       return {
-        background: i % 2 !== 0 ? "#ffffff" : "#dbdbff",
+        background: i % 2 !== 0 ? '#ffffff' : '#dbdbff',
       };
     },
     sendDate() {
       this.showPicker = false;
       this.isLoading = true;
-      if (this.selectedDate !== this.picker) this.$emit("date", this.picker);
+      if (this.selectedDate !== this.picker) this.$emit('date', this.picker);
     },
   },
 };
