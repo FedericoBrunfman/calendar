@@ -44,7 +44,7 @@ export default {
   },
   async mounted() {
     const date = this.createDate(new Date());
-    await this.getAllOffices();
+    // await this.getAllOffices();
     await this.getAppointmentsByDate(date, true);
   },
   methods: {
@@ -71,8 +71,8 @@ export default {
       }
       this.getAppointmentsByDate(this.selectedDate);
     },
-    getAllOffices() {
-      getAllOffices().then((response) => {
+    async getAllOffices() {
+      await getAllOffices().then((response) => {
         this.offices = response.map((office) => {
           let hoursObj = {};
           this.hours.forEach((element) => {
@@ -97,7 +97,7 @@ export default {
       d.setUTCDate(d.getUTCDate() + 1);
       const nextDay = d.toISOString().substr(0, 10);
       await this.getAllOffices();
-      getAppointmentsByDate({
+      await getAppointmentsByDate({
         startDate: date,
         endDate: nextDay,
       })
