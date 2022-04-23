@@ -30,3 +30,11 @@ export async  function removeManyAppointment(id) {
   })
   return await response.json()
 }
+
+export async  function removeDayAppointment(id, date) {
+  const response = await fetch(`/appointments/remove-day/${id}/${date}`, {
+    method: 'DELETE',
+    headers: {'Content-Type': 'application/json'},
+  })
+  return await response.json()
+}

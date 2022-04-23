@@ -20,7 +20,7 @@ import { OfficeExists } from './guards/office-exists.guard';
 
 @Controller('appointments')
 export class AppointmentsController {
-  constructor(private readonly appointmentsService: AppointmentsService) {}
+  constructor(private readonly appointmentsService: AppointmentsService) { }
 
   @UseGuards(OfficeExists)
   @UsePipes(new AppointmentPipe())
@@ -56,9 +56,14 @@ export class AppointmentsController {
   remove(@Param('id') id: string) {
     return this.appointmentsService.remove(id);
   }
-  
+
   @Delete('remove-many/:uuid')
   removeMany(@Param('uuid') uuid: string) {
     return this.appointmentsService.removeMany(uuid);
+  }
+
+  @Delete('remove-day/:uuid/:date')
+  removeByDay(@Param('uuid') uuid: string, @Param('date') date: string) {
+    return this.appointmentsService.removeByDay(uuid, date);
   }
 }

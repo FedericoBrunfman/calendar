@@ -27,12 +27,16 @@ export default {
     return {
       options: [
         {
-          label: "Remover este evento",
+          label: "Remover este único evento",
           value: 1,
         },
         {
           label: "Remover todos los eventos recurrentes",
           value: 2,
+        },
+        {
+          label: "Remover todos eventos relacionados en este día",
+          value: 3,
         },
       ],
       selected: 1,

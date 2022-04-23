@@ -23,7 +23,8 @@ import {
   getAppointmentsByDate,
   createAppointment,
   removeAppointment,
-  removeManyAppointment
+  removeManyAppointment,
+  removeDayAppointment
 } from "../services/AppointmentService";
 export default {
   name: "Home",
@@ -60,11 +61,13 @@ export default {
       }
       return hours;
     },
-    async remove({ option, id }) {
+    async remove({ option, id, date }) {
       if (option === 1) {
         await removeAppointment(id);
-      } else {
+      } else if (option === 2) {
         await removeManyAppointment(id)
+      } else if (option === 3) {
+        await removeDayAppointment(id, date)
       }
       this.getAppointmentsByDate(this.selectedDate);
     },

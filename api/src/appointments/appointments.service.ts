@@ -19,7 +19,7 @@ export class AppointmentsService {
     @InjectModel(Appointment.name)
     private readonly appointmentModel: Model<Appointment>,
     private readonly datesService: DatesService,
-  ) {}
+  ) { }
 
   create(createAppointmentDto: CreateAppointmentDto) {
     const appoinments = this.datesService.extendDates(createAppointmentDto);
@@ -69,6 +69,17 @@ export class AppointmentsService {
 
   async removeMany(uuid: string) {
     return await this.appointmentModel.deleteMany({ uuid });
+  }
+
+  async removeByDay(uuid: string, date: string) {
+    const nextDay = new Date(date);
+    nextDay.setDate(nextDay.getDate() + 1);
+    return await this.appointmentModel.deleteMany({
+      uuid, date: {
+        $gte: new Date(date).toISOString(),
+        $lt: new Date(nextDay).toISOString()
+      }
+    });
   }
 
   async findManyByDate(dateQuery: DateQuery) {

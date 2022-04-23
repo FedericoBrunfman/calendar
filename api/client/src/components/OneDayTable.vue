@@ -330,6 +330,7 @@ export default {
       this.$emit('remove', {
         option,
         id,
+        date: this.selectedDate
       });
     },
     rollContent(id, showContent) {
