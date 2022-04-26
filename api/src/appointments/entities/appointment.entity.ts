@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Transform, Type } from 'class-transformer';
-import mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
+import * as mongoose from 'mongoose';
 import { Factory } from 'nestjs-seeder';
 import { Office } from 'src/offices/entities/office.entity';
 

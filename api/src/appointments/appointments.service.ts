@@ -17,7 +17,7 @@ import { DatesService } from 'src/common/dates/dates.service';
 export class AppointmentsService {
   constructor(
     @InjectModel(Appointment.name)
-    private readonly appointmentModel: Model<Appointment>,
+    private readonly appointmentModel: Model<Appointment, any>,
     private readonly datesService: DatesService,
   ) { }
 
