@@ -8,15 +8,16 @@ import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Model, Connection } from 'mongoose';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { CreateOfficeDto } from './dto/create-office.dto';
-import { Event } from 'src/events/entities/event.entity';
 import { UpdateOfficeDto } from './dto/update-office.dto';
 import { Office } from './entities/office.entity';
 import { OfficeQuery } from './dto/office-query.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class OfficesService {
   constructor(
     @InjectModel(Office.name) private readonly officeModel: Model<Office>,
+    private readonly prismaService: PrismaService,
   ) {}
 
   findAll(paginationQuery: PaginationQueryDto, officeQuery: OfficeQuery) {
@@ -48,8 +49,11 @@ export class OfficesService {
   }
 
   create(createOfficeDto: CreateOfficeDto) {
-    const office = new this.officeModel(createOfficeDto);
-    return office.save();
+    // const office = new this.officeModel(createOfficeDto);
+    // return office.save();
+    return this.prismaService.office.create({
+      data: createOfficeDto,
+    });
   }
 
   async update(id: string, updateOfficeDto: UpdateOfficeDto) {

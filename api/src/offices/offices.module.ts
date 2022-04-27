@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Event, EventSchema } from 'src/events/entities/event.entity';
+import { PrismaModule } from 'src/prisma/prisma.module';
 import { Office, OfficeSchema } from './entities/office.entity';
 import { OfficesController } from './offices.controller';
 import { OfficesService } from './offices.service';
@@ -12,14 +12,11 @@ import { OfficesService } from './offices.service';
         name: Office.name,
         schema: OfficeSchema,
       },
-      {
-        name: Event.name,
-        schema: EventSchema,
-      },
     ]),
+    PrismaModule
   ],
   controllers: [OfficesController],
   providers: [OfficesService],
-  exports: [OfficesService]
+  exports: [OfficesService],
 })
 export class OfficesModule {}

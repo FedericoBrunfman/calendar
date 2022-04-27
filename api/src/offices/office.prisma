@@ -1,0 +1,6 @@
+model Office {
+  id           Int           @id @default(autoincrement())
+  name         String
+  subsidiary   String
+  appointments Appointment[]
+}

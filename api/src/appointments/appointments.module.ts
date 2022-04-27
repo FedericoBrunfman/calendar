@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Appointment, AppointmentSchema } from './entities/appointment.entity';
 import { OfficesModule } from 'src/offices/offices.module';
 import { DatesModule } from 'src/common/dates/dates.module';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { DatesModule } from 'src/common/dates/dates.module';
         schema: AppointmentSchema,
       },
     ]),
+    PrismaModule,
     OfficesModule,
     DatesModule
   ],

@@ -22,8 +22,8 @@ import { OfficeExists } from './guards/office-exists.guard';
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) { }
 
-  @UseGuards(OfficeExists)
-  @UsePipes(new AppointmentPipe())
+  // @UseGuards(OfficeExists)
+  // @UsePipes(new AppointmentPipe())
   @Post()
   create(@Body() createAppointmentDto: CreateAppointmentDto) {
     return this.appointmentsService.create(createAppointmentDto);

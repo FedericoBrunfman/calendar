@@ -12,6 +12,7 @@ import { Appointment } from './entities/appointment.entity';
 import { Model } from 'mongoose';
 import { DateQuery } from './dto/date-query.dto';
 import { DatesService } from 'src/common/dates/dates.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AppointmentsService {
@@ -19,11 +20,14 @@ export class AppointmentsService {
     @InjectModel(Appointment.name)
     private readonly appointmentModel: Model<Appointment, any>,
     private readonly datesService: DatesService,
-  ) { }
+    private readonly prismaService: PrismaService,
+  ) {}
 
   create(createAppointmentDto: CreateAppointmentDto) {
     const appoinments = this.datesService.extendDates(createAppointmentDto);
+    // console.log(appoinments, 'appointments')
     return this.appointmentModel.insertMany(appoinments);
+    // return this.prismaService.appointment.createMany({ data: appoinments });
   }
 
   findAll(paginationQuery: PaginationQueryDto) {
@@ -75,10 +79,11 @@ export class AppointmentsService {
     const nextDay = new Date(date);
     nextDay.setDate(nextDay.getDate() + 1);
     return await this.appointmentModel.deleteMany({
-      uuid, date: {
+      uuid,
+      date: {
         $gte: new Date(date).toISOString(),
-        $lt: new Date(nextDay).toISOString()
-      }
+        $lt: new Date(nextDay).toISOString(),
+      },
     });
   }
 
